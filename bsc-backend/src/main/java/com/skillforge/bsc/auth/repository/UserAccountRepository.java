@@ -1,0 +1,16 @@
+package com.skillforge.bsc.auth.repository;
+
+import com.skillforge.bsc.auth.entity.UserAccount;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+import java.util.UUID;
+
+public interface UserAccountRepository extends JpaRepository<UserAccount, UUID> {
+
+    Optional<UserAccount> findByEmail(String email);
+
+    Optional<UserAccount> findByEmployeeId(UUID employeeId);
+
+    boolean existsByEmail(String email);
+}
