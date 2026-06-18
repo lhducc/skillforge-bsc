@@ -39,6 +39,7 @@ log/
 .env.*
 !.env.example
 
+application.yml
 application-local.yml
 application-local.yaml
 application-dev-local.yml
