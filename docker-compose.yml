@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: bsc_skillforge_postgres
+    environment:
+      POSTGRES_DB: bsc_skillforge
+      POSTGRES_USER: bsc_user
+      POSTGRES_PASSWORD: bsc_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - bsc_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  bsc_postgres_data:
