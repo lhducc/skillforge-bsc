@@ -29,7 +29,22 @@ public enum ErrorCode {
     B1_REVENUE_NEGATIVE("B1_REVENUE_NEGATIVE", "Revenue must be greater than or equal to 0", HttpStatus.BAD_REQUEST),
     B1_MARKET_SHARE_TOTAL_INVALID("B1_MARKET_SHARE_TOTAL_INVALID", "Market share total must equal 100 for each period", HttpStatus.BAD_REQUEST),
     B1_MARKET_SHARE_OWN_COMPANY_REQUIRED("B1_MARKET_SHARE_OWN_COMPANY_REQUIRED", "Each market share period must include own company", HttpStatus.BAD_REQUEST),
-    B1_TEXT_ITEM_EMPTY("B1_TEXT_ITEM_EMPTY", "Text item content must not be blank", HttpStatus.BAD_REQUEST);
+    B1_TEXT_ITEM_EMPTY("B1_TEXT_ITEM_EMPTY", "Text item content must not be blank", HttpStatus.BAD_REQUEST),
+
+    B2_ANALYSIS_ITEM_NOT_FOUND("B2_ANALYSIS_ITEM_NOT_FOUND", "Analysis item not found", HttpStatus.NOT_FOUND),
+    B2_ANALYSIS_MODEL_TYPE_INVALID("B2_ANALYSIS_MODEL_TYPE_INVALID", "Analysis model type is invalid", HttpStatus.BAD_REQUEST),
+    B2_ANALYSIS_FACTOR_INVALID("B2_ANALYSIS_FACTOR_INVALID", "Factor code is invalid for the selected model type", HttpStatus.BAD_REQUEST),
+    B2_ANALYSIS_ITEM_SELECTED("B2_ANALYSIS_ITEM_SELECTED", "Selected analysis item cannot be removed or changed", HttpStatus.BAD_REQUEST),
+    B2_SWOT_ITEM_NOT_FOUND("B2_SWOT_ITEM_NOT_FOUND", "SWOT item not found", HttpStatus.NOT_FOUND),
+    B2_SWOT_TYPE_INVALID("B2_SWOT_TYPE_INVALID", "SWOT type is invalid", HttpStatus.BAD_REQUEST),
+    B2_SWOT_ITEM_DUPLICATED_SOURCE("B2_SWOT_ITEM_DUPLICATED_SOURCE", "Analysis item is already selected into SWOT", HttpStatus.BAD_REQUEST),
+    B2_SWOT_ITEM_ALREADY_USED("B2_SWOT_ITEM_ALREADY_USED", "SWOT item is already used by an active candidate strategy", HttpStatus.BAD_REQUEST),
+    B2_CANDIDATE_STRATEGY_NOT_FOUND("B2_CANDIDATE_STRATEGY_NOT_FOUND", "Candidate strategy not found", HttpStatus.NOT_FOUND),
+    B2_CANDIDATE_STRATEGY_LIMIT_EXCEEDED("B2_CANDIDATE_STRATEGY_LIMIT_EXCEEDED", "Candidate strategy limit exceeded", HttpStatus.BAD_REQUEST),
+    B2_STRATEGY_GROUP_INVALID("B2_STRATEGY_GROUP_INVALID", "Strategy group is invalid", HttpStatus.BAD_REQUEST),
+    B2_STRATEGY_NAME_REQUIRED("B2_STRATEGY_NAME_REQUIRED", "Candidate strategy name must not be blank", HttpStatus.BAD_REQUEST),
+    B2_STRATEGY_SWOT_RULE_INVALID("B2_STRATEGY_SWOT_RULE_INVALID", "Candidate strategy SWOT rule is invalid", HttpStatus.BAD_REQUEST),
+    B2_CANDIDATE_STRATEGY_REQUIRED("B2_CANDIDATE_STRATEGY_REQUIRED", "At least one active candidate strategy is required", HttpStatus.BAD_REQUEST);
 
     private final String code;
     private final String message;
