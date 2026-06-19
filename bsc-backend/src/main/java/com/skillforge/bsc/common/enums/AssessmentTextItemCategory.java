@@ -1,0 +1,13 @@
+package com.skillforge.bsc.common.enums;
+
+public enum AssessmentTextItemCategory {
+    CURRENT_SEGMENT,
+    FUTURE_SEGMENT,
+    CURRENT_CORE_PRODUCT,
+    FUTURE_CORE_PRODUCT,
+    COMPANY_STRENGTH,
+    INDUSTRY_SUCCESS_FACTOR,
+    COMPETITOR_STRENGTH,
+    COMPETITOR_WEAKNESS,
+    COMPETITIVE_ADVANTAGE
+}
