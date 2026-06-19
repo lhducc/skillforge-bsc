@@ -36,11 +36,13 @@ Important backend areas:
   V1__init_core_tables.sql
   V2__create_phase1_tables.sql
   V3__create_b1_assessment_tables.sql
+  V4__create_b2_strategy_building_tables.sql
 
 Notes:
 * `V1__init_core_tables.sql` currently contains the initial Flyway health/check setup.
 * `V2__create_phase1_tables.sql` contains the actual Phase 1 database schema.
 * `V3__create_b1_assessment_tables.sql` contains the Phase 2 B1 Assessment schema.
+* `V4__create_b2_strategy_building_tables.sql` contains the Phase 3 B2 Strategy Building schema.
 ```
 
 ## Completed Phases
@@ -48,6 +50,7 @@ Notes:
 - Phase 0 Project Setup: DONE
 - Phase 1 Company Setup + BSC Strategy Cycle: DONE
 - Phase 2 B1 Assessment: DONE
+- Phase 3 B2 Strategy Building: DONE
 
 ## Phase 1 Branch And Tag
 
@@ -113,6 +116,45 @@ Notes:
 - `GET /api/v1/bsc-strategies/{strategyId}/assessment`
 - `POST /api/v1/bsc-strategies/{strategyId}/assessment/complete`
 
+## Phase 3 Branch
+
+- Branch: `phase/3-b2-strategy-building`
+- Status: implemented and tested locally.
+
+## Phase 3 Validation Summary
+
+- Maven compile passed.
+- App startup passed.
+- Swagger B2 API flow passed.
+- B2 data belongs to current BSC Strategy.
+- B2 completion requires B1 completed.
+- 7S can only create S/W.
+- 5 Forces + PESTEL can only create O/T.
+- One analysis item can be selected into at most one SWOT item.
+- Candidate strategies are limited to 12 per BSC Strategy.
+- One SWOT item can be used in at most one candidate strategy.
+- SO/ST/WO/WT rules are validated.
+- Complete B2 updates `B2_STRATEGY_BUILDING = COMPLETED`.
+- Complete B2 unlocks `B3_STRATEGY_RESULT = NOT_STARTED`.
+
+## Implemented Phase 3 Tables
+
+- `analysis_items`
+- `swot_items`
+- `candidate_strategies`
+- `strategy_swot_items`
+
+## Implemented Phase 3 APIs
+
+- `PUT /api/v1/bsc-strategies/{strategyId}/analysis-items`
+- `POST /api/v1/bsc-strategies/{strategyId}/swot-items`
+- `DELETE /api/v1/swot-items/{swotItemId}`
+- `POST /api/v1/bsc-strategies/{strategyId}/candidate-strategies`
+- `PUT /api/v1/candidate-strategies/{candidateStrategyId}`
+- `DELETE /api/v1/candidate-strategies/{candidateStrategyId}`
+- `GET /api/v1/bsc-strategies/{strategyId}/candidate-strategies`
+- `POST /api/v1/bsc-strategies/{strategyId}/strategy-building/complete`
+
 ## Current Technical Notes
 
 - Use Flyway for all schema changes.
@@ -128,42 +170,13 @@ Notes:
 
 ## Next Phase
 
-- Phase 3: B2 Strategy Building
-- Expected branch: `phase/3-b2-strategy-building`
+- Phase 4: B3 Strategy Selection
+- Expected branch: `phase/4-b3-strategy-selection`
 - Expected scope:
-  - `analysis_items`
-  - `swot_items`
-  - `candidate_strategies`
-  - `strategy_swot_items`
-  - B2 APIs
-  - Complete B2 unlocks B3
-
-## Expected Phase 3 Validation
-
-- B2 data belongs to the current BSC Strategy.
-- B2 completion requires `B1_ASSESSMENT = COMPLETED`.
-- Analysis items support 7S, 5 Forces, and PESTEL.
-- Internal analysis items can be selected as either S or W, not both.
-- External analysis items can be selected as either O or T, not both.
-- Each analysis item can be selected into at most one SWOT item.
-- Total candidate strategies per BSC Strategy must not exceed 12.
-- Each SWOT item can be used in at most one candidate strategy.
-- Candidate strategy group must be valid: `SO`, `ST`, `WO`, or `WT`.
-- Complete B2 updates `B2_STRATEGY_BUILDING` to `COMPLETED`.
-- Complete B2 unlocks `B3_STRATEGY_RESULT` to `NOT_STARTED`.
-
-## Required Reading Before Phase 3
-
-Read these before implementing Phase 3:
-
-- `./CODEX.md`
-- `./AGENT_HANDOFF.md`
-- `./bsc-spec/DEVELOPMENT_PLAN.md` Phase 3
-- `./bsc-spec/DATABASE_SCHEMA.md` B2 Strategy Building
-- `./bsc-spec/BUSINESS_RULES.md` B2 Strategy Building
-- `./bsc-spec/API_CONTRACT.md` B2 Strategy Building
-- `./bsc-spec/CODEX_GUIDE.md`
-- `./bsc-requirement/B2_xay_dung_chien_luoc.md` if deeper business clarification is needed
+  - `selected_strategies`
+  - Select strategies.
+  - Get selected strategies.
+  - Complete B3 unlocks B4.
 
 ## Working Rules For Future Codex Sessions
 
