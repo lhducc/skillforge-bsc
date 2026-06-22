@@ -39,6 +39,7 @@ Important backend areas:
   V4__create_b2_strategy_building_tables.sql
   V5__create_b3_strategy_selection_tables.sql
   V6__create_b4_strategy_map_tables.sql
+  V7__create_b5_fishbone_tables.sql
 
 Notes:
 * `V1__init_core_tables.sql` currently contains the initial Flyway health/check setup.
@@ -47,6 +48,7 @@ Notes:
 * `V4__create_b2_strategy_building_tables.sql` contains the Phase 3 B2 Strategy Building schema.
 * `V5__create_b3_strategy_selection_tables.sql` contains the Phase 4 B3 Strategy Selection schema.
 * `V6__create_b4_strategy_map_tables.sql` contains the Phase 5 B4 Strategy Map schema.
+* `V7__create_b5_fishbone_tables.sql` contains the Phase 6 B5 Fishbone / Department KPI schema.
 ```
 
 ## Completed Phases
@@ -57,6 +59,7 @@ Notes:
 - Phase 3 B2 Strategy Building: DONE
 - Phase 4 B3 Strategy Selection: DONE
 - Phase 5 B4 Strategy Map: DONE
+- Phase 6 B5 Fishbone / Department KPI: DONE
 
 ## Phase 1 Branch And Tag
 
@@ -265,6 +268,55 @@ Notes:
 - `GET /api/v1/bsc-strategies/{strategyId}/final-strategy-map`
 - `POST /api/v1/bsc-strategies/{strategyId}/strategy-map/complete`
 
+## Phase 6 Branch
+
+- Branch: `phase/6-b5-fishbone-department-kpi`
+- Status: implemented and tested locally.
+
+## Phase 6 Validation Summary
+
+- Maven test passed.
+- App startup passed.
+- Swagger B5 happy case passed.
+- Department join final objective works.
+- Create department KPI works.
+- Get company fishbone works.
+- Get department fishbone works.
+- Complete B5 updates `B5_FISHBONE = COMPLETED`.
+- Complete B5 unlocks `B6_WEIGHT_ALLOCATION = NOT_STARTED`.
+- B5 validates B4 must be completed before B5.
+- B5 validates BSC Strategy must remain `DRAFT`.
+- B5 validates final objective must belong to current BSC Strategy.
+- B5 validates department must exist and belong to same company as the BSC Strategy.
+- B5 prevents duplicate active department participation for the same strategy + final objective + department.
+- B5 validates department KPI must belong to a valid active department participation.
+- B5 validates department KPI strategy/objective/department must match the participation.
+- B5 validates KPI name must not be blank.
+- Delete KPI follows project convention using soft delete/status.
+- Remove department participation rejects removal if active KPIs still exist.
+- Rejoining a removed participation reactivates it.
+- Complete B5 uses strict MVP validation:
+  - every active final objective has at least one active department participation
+  - every active final objective has at least one active department KPI
+  - every active participation has at least one active KPI
+- For Swagger testing convenience, seed data was used to create missing B5 participation/KPI rows after one B5 happy case was tested through Swagger. Completion was still verified through API.
+
+## Implemented Phase 6 Tables
+
+- `department_participations`
+- `department_kpis`
+
+## Implemented Phase 6 APIs
+
+- `POST /api/v1/bsc-strategies/{strategyId}/department-participations`
+- `DELETE /api/v1/department-participations/{participationId}`
+- `POST /api/v1/department-kpis`
+- `PUT /api/v1/department-kpis/{departmentKpiId}`
+- `DELETE /api/v1/department-kpis/{departmentKpiId}`
+- `GET /api/v1/bsc-strategies/{strategyId}/fishbone/company`
+- `GET /api/v1/bsc-strategies/{strategyId}/fishbone/departments/{departmentId}`
+- `POST /api/v1/bsc-strategies/{strategyId}/fishbone/complete`
+
 ## Current Technical Notes
 
 - Use Flyway for all schema changes.
@@ -280,32 +332,33 @@ Notes:
 - Do not edit already-applied migrations unless explicitly instructed and safe. Prefer a new Flyway migration.
 - B4 final strategic objectives are the source data for B5 Fishbone / Department KPI.
 - After B4 is completed, B5 should read from `final_strategic_objectives`.
+- B5 reads source data from `final_strategic_objectives` produced by B4.
+- B5 does not create final objectives.
+- B5 does not create B6 weights.
+- B5 does not create B7 measurements.
+- B5 does not create B8 action plans/tasks/reports.
+- B5 does not implement Security/JWT/RBAC/CORS.
 
 ## Next Phase
 
-- Next Phase: Phase 6 - B5 Fishbone / Department KPI
-- Expected branch: `phase/6-b5-fishbone-department-kpi`
-- Expected Phase 6 scope:
-  - Module: B5 Fishbone / Department KPI
+- Next Phase: Phase 7 - B6 Weight Allocation
+- Expected branch: `phase/7-b6-weight-allocation`
+- Expected Phase 7 scope:
+  - Module: B6 Weight Allocation
   - Tables:
-    - `department_participations`
-    - `department_kpis`
+    - `perspective_weights`
+    - `objective_weights`
+    - `kpi_weights`
   - APIs:
-    - Department join final objective
-    - Remove department participation
-    - Create department KPI
-    - Update department KPI
-    - Delete department KPI
-    - Get company fishbone
-    - Get department fishbone
-    - Complete B5
-  - Business rules:
-    - B4 must be completed before B5.
-    - Department participation must reference a final strategic objective from B4.
-    - Department cannot join the same final objective twice in the same BSC Strategy.
-    - Department KPI must belong to a valid department participation.
-    - Department KPI must belong to a final strategic objective.
-    - Complete B5 unlocks B6.
+    - Upsert perspective weights
+    - Upsert objective weights
+    - Upsert KPI weights
+    - Get weight tree
+    - Complete B6
+  - Core rules:
+    - All weights are absolute percentages on total BSC 100%, not relative child percentages.
+    - Use BigDecimal/DECIMAL, not float/double.
+    - Complete B6 unlocks B7.
 
 ## Working Rules For Future Codex Sessions
 
