@@ -37,12 +37,14 @@ Important backend areas:
   V2__create_phase1_tables.sql
   V3__create_b1_assessment_tables.sql
   V4__create_b2_strategy_building_tables.sql
+  V5__create_b3_strategy_selection_tables.sql
 
 Notes:
 * `V1__init_core_tables.sql` currently contains the initial Flyway health/check setup.
 * `V2__create_phase1_tables.sql` contains the actual Phase 1 database schema.
 * `V3__create_b1_assessment_tables.sql` contains the Phase 2 B1 Assessment schema.
 * `V4__create_b2_strategy_building_tables.sql` contains the Phase 3 B2 Strategy Building schema.
+* `V5__create_b3_strategy_selection_tables.sql` contains the Phase 4 B3 Strategy Selection schema.
 ```
 
 ## Completed Phases
@@ -51,6 +53,7 @@ Notes:
 - Phase 1 Company Setup + BSC Strategy Cycle: DONE
 - Phase 2 B1 Assessment: DONE
 - Phase 3 B2 Strategy Building: DONE
+- Phase 4 B3 Strategy Selection: DONE
 
 ## Phase 1 Branch And Tag
 
@@ -155,6 +158,36 @@ Notes:
 - `GET /api/v1/bsc-strategies/{strategyId}/candidate-strategies`
 - `POST /api/v1/bsc-strategies/{strategyId}/strategy-building/complete`
 
+## Phase 4 Branch
+
+- Branch: `phase/4-b3-strategy-selection`
+- Status: implemented and tested locally.
+
+## Phase 4 Validation Summary
+
+- Maven test passed.
+- App startup passed.
+- Swagger B3 API flow passed.
+- Select strategies works.
+- Get selected strategies works.
+- Complete B3 updates `B3_STRATEGY_RESULT = COMPLETED`.
+- Complete B3 unlocks `B4_STRATEGY_MAP = NOT_STARTED`.
+- B3 enforces 1 to 2 selected strategies.
+- B3 rejects duplicate candidate strategy selection.
+- B3 rejects duplicate priority order.
+- B3 rejects candidate strategies from another BSC Strategy.
+- B3 rejects deleted/inactive candidate strategies.
+
+## Implemented Phase 4 Tables
+
+- `selected_strategies`
+
+## Implemented Phase 4 APIs
+
+- `PUT /api/v1/bsc-strategies/{strategyId}/selected-strategies`
+- `GET /api/v1/bsc-strategies/{strategyId}/selected-strategies`
+- `POST /api/v1/bsc-strategies/{strategyId}/strategy-result/complete`
+
 ## Current Technical Notes
 
 - Use Flyway for all schema changes.
@@ -170,13 +203,15 @@ Notes:
 
 ## Next Phase
 
-- Phase 4: B3 Strategy Selection
-- Expected branch: `phase/4-b3-strategy-selection`
+- Phase 5: B4 Strategy Map
+- Expected branch: `phase/5-b4-strategy-map`
 - Expected scope:
-  - `selected_strategies`
-  - Select strategies.
-  - Get selected strategies.
-  - Complete B3 unlocks B4.
+  - `strategy_maps`
+  - `strategic_objectives`
+  - `objective_links`
+  - `final_strategic_objectives`
+  - `final_objective_sources`
+  - `final_objective_links`
 
 ## Working Rules For Future Codex Sessions
 
