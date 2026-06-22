@@ -38,6 +38,7 @@ Important backend areas:
   V3__create_b1_assessment_tables.sql
   V4__create_b2_strategy_building_tables.sql
   V5__create_b3_strategy_selection_tables.sql
+  V6__create_b4_strategy_map_tables.sql
 
 Notes:
 * `V1__init_core_tables.sql` currently contains the initial Flyway health/check setup.
@@ -45,6 +46,7 @@ Notes:
 * `V3__create_b1_assessment_tables.sql` contains the Phase 2 B1 Assessment schema.
 * `V4__create_b2_strategy_building_tables.sql` contains the Phase 3 B2 Strategy Building schema.
 * `V5__create_b3_strategy_selection_tables.sql` contains the Phase 4 B3 Strategy Selection schema.
+* `V6__create_b4_strategy_map_tables.sql` contains the Phase 5 B4 Strategy Map schema.
 ```
 
 ## Completed Phases
@@ -54,6 +56,7 @@ Notes:
 - Phase 2 B1 Assessment: DONE
 - Phase 3 B2 Strategy Building: DONE
 - Phase 4 B3 Strategy Selection: DONE
+- Phase 5 B4 Strategy Map: DONE
 
 ## Phase 1 Branch And Tag
 
@@ -188,9 +191,84 @@ Notes:
 - `GET /api/v1/bsc-strategies/{strategyId}/selected-strategies`
 - `POST /api/v1/bsc-strategies/{strategyId}/strategy-result/complete`
 
+## Phase 5 Branch
+
+- Branch: `phase/5-b4-strategy-map`
+- Status: implemented and tested locally.
+
+## Phase 5 Validation Summary
+
+- Maven test passed.
+- App startup passed.
+- Swagger B4 API flow passed.
+- Create individual strategy map works.
+- Create strategic objective works.
+- Update strategic objective works.
+- Delete strategic objective works.
+- Create objective link works.
+- Delete objective link works.
+- Build final objectives works.
+- Create final objective link works.
+- Delete final objective link works.
+- Get final strategy map works.
+- Complete B4 updates `B4_STRATEGY_MAP = COMPLETED`.
+- Complete B4 unlocks `B5_FISHBONE = NOT_STARTED`.
+- B4 validates B3 must be completed before working with strategy map.
+- B4 validates BSC Strategy must remain `DRAFT`.
+- B4 validates each selected strategy must have an individual strategy map.
+- B4 validates each selected strategy must have objectives covering all 4 BSC perspectives:
+  - `FINANCIAL`
+  - `CUSTOMER`
+  - `INTERNAL_PROCESS`
+  - `LEARNING_AND_GROWTH`
+- B4 validates each selected strategy has at most 12 active objectives.
+- B4 rejects objective links where source equals target.
+- B4 rejects duplicate objective links.
+- B4 validates source and target objectives must belong to the same strategy map.
+- B4 supports building final objectives from source objectives.
+- B4 supports `ORIGINAL`, `MERGED`, and `MANUAL_EDITED` final objective source types if implemented.
+- B4 validates merged source objectives must belong to the same perspective.
+- B4 validates a source objective cannot be used in more than one active final objective in the same build request.
+- B4 validates final objectives cover all 4 BSC perspectives.
+- B4 validates final objective links:
+  - no self-link
+  - no duplicate link
+  - source and target final objectives belong to the current BSC Strategy
+- Swagger happy case with 2 selected strategies was tested:
+  - Created 2 individual strategy maps.
+  - Created objectives for both selected strategies.
+  - Created causal links for both individual maps.
+  - Built final objectives from source objectives.
+  - Created final objective links.
+  - Completed B4 successfully.
+
+## Implemented Phase 5 Tables
+
+- `strategy_maps`
+- `strategic_objectives`
+- `objective_links`
+- `final_strategic_objectives`
+- `final_objective_sources`
+- `final_objective_links`
+
+## Implemented Phase 5 APIs
+
+- `POST /api/v1/bsc-strategies/{strategyId}/strategy-maps`
+- `POST /api/v1/strategy-maps/{strategyMapId}/objectives`
+- `PUT /api/v1/strategic-objectives/{objectiveId}`
+- `DELETE /api/v1/strategic-objectives/{objectiveId}`
+- `POST /api/v1/strategy-maps/{strategyMapId}/objective-links`
+- `DELETE /api/v1/objective-links/{objectiveLinkId}`
+- `POST /api/v1/bsc-strategies/{strategyId}/final-objectives/build`
+- `POST /api/v1/bsc-strategies/{strategyId}/final-objective-links`
+- `DELETE /api/v1/final-objective-links/{finalObjectiveLinkId}`
+- `GET /api/v1/bsc-strategies/{strategyId}/final-strategy-map`
+- `POST /api/v1/bsc-strategies/{strategyId}/strategy-map/complete`
+
 ## Current Technical Notes
 
 - Use Flyway for all schema changes.
+- Do not edit old migrations after they are applied.
 - Do not use Hibernate `ddl-auto=update` or `ddl-auto=create`; keep schema validation explicit.
 - Use request/response DTOs and the shared `ApiResponse` wrapper.
 - Do not return JPA entities directly from controllers.
@@ -200,18 +278,34 @@ Notes:
 - Use `BigDecimal` for business values such as money, percentages, weights, targets, actual values, completion rates, and scores.
 - Do not use `float` or `double` for business values.
 - Do not edit already-applied migrations unless explicitly instructed and safe. Prefer a new Flyway migration.
+- B4 final strategic objectives are the source data for B5 Fishbone / Department KPI.
+- After B4 is completed, B5 should read from `final_strategic_objectives`.
 
 ## Next Phase
 
-- Phase 5: B4 Strategy Map
-- Expected branch: `phase/5-b4-strategy-map`
-- Expected scope:
-  - `strategy_maps`
-  - `strategic_objectives`
-  - `objective_links`
-  - `final_strategic_objectives`
-  - `final_objective_sources`
-  - `final_objective_links`
+- Next Phase: Phase 6 - B5 Fishbone / Department KPI
+- Expected branch: `phase/6-b5-fishbone-department-kpi`
+- Expected Phase 6 scope:
+  - Module: B5 Fishbone / Department KPI
+  - Tables:
+    - `department_participations`
+    - `department_kpis`
+  - APIs:
+    - Department join final objective
+    - Remove department participation
+    - Create department KPI
+    - Update department KPI
+    - Delete department KPI
+    - Get company fishbone
+    - Get department fishbone
+    - Complete B5
+  - Business rules:
+    - B4 must be completed before B5.
+    - Department participation must reference a final strategic objective from B4.
+    - Department cannot join the same final objective twice in the same BSC Strategy.
+    - Department KPI must belong to a valid department participation.
+    - Department KPI must belong to a final strategic objective.
+    - Complete B5 unlocks B6.
 
 ## Working Rules For Future Codex Sessions
 

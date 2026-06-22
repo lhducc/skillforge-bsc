@@ -50,7 +50,30 @@ public enum ErrorCode {
     B3_SELECTED_STRATEGY_DUPLICATED("B3_SELECTED_STRATEGY_DUPLICATED", "Selected strategies must not be duplicated", HttpStatus.BAD_REQUEST),
     B3_CANDIDATE_STRATEGY_INVALID("B3_CANDIDATE_STRATEGY_INVALID", "Candidate strategy is invalid for B3 selection", HttpStatus.BAD_REQUEST),
     B3_PRIORITY_ORDER_INVALID("B3_PRIORITY_ORDER_INVALID", "Priority order must be 1 or 2", HttpStatus.BAD_REQUEST),
-    B3_PRIORITY_ORDER_DUPLICATED("B3_PRIORITY_ORDER_DUPLICATED", "Priority order must not be duplicated", HttpStatus.BAD_REQUEST);
+    B3_PRIORITY_ORDER_DUPLICATED("B3_PRIORITY_ORDER_DUPLICATED", "Priority order must not be duplicated", HttpStatus.BAD_REQUEST),
+
+    B4_SELECTED_STRATEGY_INVALID("B4_SELECTED_STRATEGY_INVALID", "Selected strategy is invalid for B4", HttpStatus.BAD_REQUEST),
+    B4_STRATEGY_MAP_NOT_FOUND("B4_STRATEGY_MAP_NOT_FOUND", "Strategy map not found", HttpStatus.NOT_FOUND),
+    B4_STRATEGY_MAP_DUPLICATED("B4_STRATEGY_MAP_DUPLICATED", "Strategy map already exists for selected strategy", HttpStatus.BAD_REQUEST),
+    B4_STRATEGY_MAP_TYPE_INVALID("B4_STRATEGY_MAP_TYPE_INVALID", "Strategy map type is invalid", HttpStatus.BAD_REQUEST),
+    B4_OBJECTIVE_NOT_FOUND("B4_OBJECTIVE_NOT_FOUND", "Strategic objective not found", HttpStatus.NOT_FOUND),
+    B4_OBJECTIVE_NAME_REQUIRED("B4_OBJECTIVE_NAME_REQUIRED", "Objective name must not be blank", HttpStatus.BAD_REQUEST),
+    B4_OBJECTIVE_PERSPECTIVE_REQUIRED("B4_OBJECTIVE_PERSPECTIVE_REQUIRED", "Objective perspective is required or invalid", HttpStatus.BAD_REQUEST),
+    B4_OBJECTIVE_LIMIT_EXCEEDED("B4_OBJECTIVE_LIMIT_EXCEEDED", "Objective limit exceeded", HttpStatus.BAD_REQUEST),
+    B4_MISSING_PERSPECTIVE("B4_MISSING_PERSPECTIVE", "Strategy map must include all 4 BSC perspectives", HttpStatus.BAD_REQUEST),
+    B4_OBJECTIVE_LINK_NOT_FOUND("B4_OBJECTIVE_LINK_NOT_FOUND", "Objective link not found", HttpStatus.NOT_FOUND),
+    B4_OBJECTIVE_LINK_SELF_REFERENCE("B4_OBJECTIVE_LINK_SELF_REFERENCE", "Objective link cannot reference itself", HttpStatus.BAD_REQUEST),
+    B4_OBJECTIVE_LINK_DUPLICATED("B4_OBJECTIVE_LINK_DUPLICATED", "Objective link is duplicated", HttpStatus.BAD_REQUEST),
+    B4_OBJECTIVE_LINK_INVALID("B4_OBJECTIVE_LINK_INVALID", "Objective link is invalid", HttpStatus.BAD_REQUEST),
+    B4_FINAL_OBJECTIVE_REQUIRED("B4_FINAL_OBJECTIVE_REQUIRED", "Final objective is required", HttpStatus.BAD_REQUEST),
+    B4_FINAL_OBJECTIVE_NOT_FOUND("B4_FINAL_OBJECTIVE_NOT_FOUND", "Final objective not found", HttpStatus.NOT_FOUND),
+    B4_FINAL_OBJECTIVE_SOURCE_INVALID("B4_FINAL_OBJECTIVE_SOURCE_INVALID", "Final objective source is invalid", HttpStatus.BAD_REQUEST),
+    B4_FINAL_OBJECTIVE_SOURCE_DUPLICATED("B4_FINAL_OBJECTIVE_SOURCE_DUPLICATED", "Source objective must not be reused across final objectives", HttpStatus.BAD_REQUEST),
+    B4_FINAL_OBJECTIVE_COUNT_INVALID("B4_FINAL_OBJECTIVE_COUNT_INVALID", "Final objective count is invalid", HttpStatus.BAD_REQUEST),
+    B4_FINAL_OBJECTIVE_LINK_NOT_FOUND("B4_FINAL_OBJECTIVE_LINK_NOT_FOUND", "Final objective link not found", HttpStatus.NOT_FOUND),
+    B4_FINAL_OBJECTIVE_LINK_SELF_REFERENCE("B4_FINAL_OBJECTIVE_LINK_SELF_REFERENCE", "Final objective link cannot reference itself", HttpStatus.BAD_REQUEST),
+    B4_FINAL_OBJECTIVE_LINK_DUPLICATED("B4_FINAL_OBJECTIVE_LINK_DUPLICATED", "Final objective link is duplicated", HttpStatus.BAD_REQUEST),
+    B4_FINAL_OBJECTIVE_LINK_INVALID("B4_FINAL_OBJECTIVE_LINK_INVALID", "Final objective link is invalid", HttpStatus.BAD_REQUEST);
 
     private final String code;
     private final String message;
