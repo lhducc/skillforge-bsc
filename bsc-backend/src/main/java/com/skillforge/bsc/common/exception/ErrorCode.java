@@ -73,7 +73,21 @@ public enum ErrorCode {
     B4_FINAL_OBJECTIVE_LINK_NOT_FOUND("B4_FINAL_OBJECTIVE_LINK_NOT_FOUND", "Final objective link not found", HttpStatus.NOT_FOUND),
     B4_FINAL_OBJECTIVE_LINK_SELF_REFERENCE("B4_FINAL_OBJECTIVE_LINK_SELF_REFERENCE", "Final objective link cannot reference itself", HttpStatus.BAD_REQUEST),
     B4_FINAL_OBJECTIVE_LINK_DUPLICATED("B4_FINAL_OBJECTIVE_LINK_DUPLICATED", "Final objective link is duplicated", HttpStatus.BAD_REQUEST),
-    B4_FINAL_OBJECTIVE_LINK_INVALID("B4_FINAL_OBJECTIVE_LINK_INVALID", "Final objective link is invalid", HttpStatus.BAD_REQUEST);
+    B4_FINAL_OBJECTIVE_LINK_INVALID("B4_FINAL_OBJECTIVE_LINK_INVALID", "Final objective link is invalid", HttpStatus.BAD_REQUEST),
+
+    B5_DEPARTMENT_ALREADY_JOINED_OBJECTIVE("B5_DEPARTMENT_ALREADY_JOINED_OBJECTIVE", "Department already joined final objective", HttpStatus.BAD_REQUEST),
+    B5_OBJECTIVE_NOT_FOUND("B5_OBJECTIVE_NOT_FOUND", "Final strategic objective not found for B5", HttpStatus.NOT_FOUND),
+    B5_DEPARTMENT_NOT_FOUND("B5_DEPARTMENT_NOT_FOUND", "Department not found for B5", HttpStatus.NOT_FOUND),
+    B5_PARTICIPATION_NOT_FOUND("B5_PARTICIPATION_NOT_FOUND", "Department participation not found", HttpStatus.NOT_FOUND),
+    B5_PARTICIPATION_HAS_ACTIVE_KPIS("B5_PARTICIPATION_HAS_ACTIVE_KPIS", "Department participation still has active KPIs", HttpStatus.BAD_REQUEST),
+    B5_KPI_NOT_FOUND("B5_KPI_NOT_FOUND", "Department KPI not found", HttpStatus.NOT_FOUND),
+    B5_KPI_NAME_REQUIRED("B5_KPI_NAME_REQUIRED", "Department KPI name must not be blank", HttpStatus.BAD_REQUEST),
+    B5_KPI_MUST_BELONG_TO_PARTICIPATION("B5_KPI_MUST_BELONG_TO_PARTICIPATION", "Department KPI must belong to a valid participation", HttpStatus.BAD_REQUEST),
+    B5_KPI_DUPLICATED("B5_KPI_DUPLICATED", "Department KPI is duplicated", HttpStatus.BAD_REQUEST),
+    B5_DEPARTMENT_HEAD_INVALID("B5_DEPARTMENT_HEAD_INVALID", "Department head is invalid for department participation", HttpStatus.BAD_REQUEST),
+    B5_FINAL_OBJECTIVE_REQUIRED("B5_FINAL_OBJECTIVE_REQUIRED", "At least one final strategic objective is required for B5", HttpStatus.BAD_REQUEST),
+    B5_PARTICIPATION_REQUIRED("B5_PARTICIPATION_REQUIRED", "Each final objective must have at least one active department participation", HttpStatus.BAD_REQUEST),
+    B5_KPI_REQUIRED("B5_KPI_REQUIRED", "Each final objective and participation must have at least one active department KPI", HttpStatus.BAD_REQUEST);
 
     private final String code;
     private final String message;
