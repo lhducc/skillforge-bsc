@@ -41,6 +41,7 @@ Important backend areas:
   V6__create_b4_strategy_map_tables.sql
   V7__create_b5_fishbone_tables.sql
   V8__create_b6_weight_allocation_tables.sql
+  V9__create_b7_kpi_measurement_tables.sql
 
 Notes:
 * `V1__init_core_tables.sql` currently contains the initial Flyway health/check setup.
@@ -51,6 +52,7 @@ Notes:
 * `V6__create_b4_strategy_map_tables.sql` contains the Phase 5 B4 Strategy Map schema.
 * `V7__create_b5_fishbone_tables.sql` contains the Phase 6 B5 Fishbone / Department KPI schema.
 * `V8__create_b6_weight_allocation_tables.sql` contains the Phase 7 B6 Weight Allocation schema.
+* `V9__create_b7_kpi_measurement_tables.sql` contains the Phase 8 B7 KPI Measurement & Target schema.
 ```
 
 ## Completed Phases
@@ -63,6 +65,7 @@ Notes:
 - Phase 5 B4 Strategy Map: DONE
 - Phase 6 B5 Fishbone / Department KPI: DONE
 - Phase 7 B6 Weight Allocation: DONE
+- Phase 8 B7 KPI Measurement & Target: DONE
 
 ## Phase 1 Branch And Tag
 
@@ -357,6 +360,54 @@ Notes:
 - `GET /api/v1/bsc-strategies/{strategyId}/weights/tree`
 - `POST /api/v1/bsc-strategies/{strategyId}/weights/complete`
 
+## Phase 8 Branch
+
+- Branch: `phase/8-b7-kpi-measurement`
+- Status: implemented and tested locally.
+
+## Phase 8 Validation Summary
+
+- Maven clean compile passed.
+- Maven test passed with UTC timezone command.
+- App startup passed.
+- Swagger B7 happy case passed.
+- GET measurements works.
+- Upsert KPI measurement works.
+- Complete B7 works.
+- Complete B7 updates `B7_MEASUREMENT_TARGET = COMPLETED`.
+- Complete B7 unlocks `B8_ACTION_PLAN = NOT_STARTED`.
+- B7 rejects measurement upsert after B7 is completed.
+- B7 validates `B6_WEIGHT_ALLOCATION` must be `COMPLETED`.
+- B7 validates BSC Strategy must be `DRAFT`.
+- B7 validates department KPI exists and is `ACTIVE`.
+- B7 validates department KPI has KPI weight from B6.
+- B7 validates unit is required.
+- B7 validates targetValue is required and >= 0.
+- B7 validates baselineValue is optional but must be >= 0 if provided.
+- B7 validates direction enum.
+- B7 validates reportingFrequency enum.
+- B7 validates threshold order greenThreshold > yellowThreshold > redThreshold.
+- B7 defaults thresholds to green=90, yellow=70, red=0 if omitted.
+- B7 validates reportOwnerId exists and belongs to the same company if provided.
+- B7 validates every active weighted KPI has one active measurement before completion.
+- B7 uses `BigDecimal`/`DECIMAL` for numeric business values.
+- B7 does not use `float`/`double` for business values.
+- B7 does not create B8 action plans, tasks, KPI reports, dashboard data, or security logic.
+
+## Implemented Phase 8 Tables
+
+- `kpi_measurements`
+
+## Implemented Phase 8 APIs
+
+- `PUT /api/v1/department-kpis/{departmentKpiId}/measurement`
+- `GET /api/v1/bsc-strategies/{strategyId}/measurements`
+- `POST /api/v1/bsc-strategies/{strategyId}/measurements/complete`
+
+## Phase 8 Migration
+
+- `V9__create_b7_kpi_measurement_tables.sql`
+
 ## Current Technical Notes
 
 - Use Flyway for all schema changes.
@@ -384,11 +435,20 @@ Notes:
 - B6 does not create B8 action plans/tasks/reports.
 - B6 does not create dashboard data.
 - B6 does not implement Security/JWT/RBAC/CORS.
+- B7 reads source data from `department_kpis`, `kpi_weights`, and `final_strategic_objectives`.
+- B7 writes only KPI measurement and target data.
+- `kpi_measurements` uses one row per `bsc_strategy_id` + `department_kpi_id` in MVP.
+- B7 measurement status is kept for future extension, not version history.
+- `targetValue = 0` is allowed, so Phase 9/10 KPI report/dashboard calculations must handle divide-by-zero safely.
+- `reportOwnerId` same-department validation is not enforced in MVP; same-company validation is implemented.
+- B7 does not create B8 action plans/tasks/reports.
+- B7 does not create dashboard data.
+- B7 does not implement Security/JWT/RBAC/CORS.
 
 ## Next Phase
 
-- Next Phase: Phase 8 - B7 KPI Measurement
-- Expected branch: `phase/8-b7-kpi-measurement`
+- Next Phase: Phase 9 - B8 Execution / Action Plan / Task / KPI Report
+- Expected branch: `phase/9-b8-execution-task-report`
 
 ## Working Rules For Future Codex Sessions
 
