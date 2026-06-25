@@ -95,7 +95,16 @@ public enum ErrorCode {
     B6_OBJECTIVE_WEIGHT_TOTAL_INVALID("B6_OBJECTIVE_WEIGHT_TOTAL_INVALID", "Objective weights in each perspective must equal the perspective weight", HttpStatus.BAD_REQUEST),
     B6_KPI_WEIGHT_MISSING("B6_KPI_WEIGHT_MISSING", "Every active department KPI must have one weight", HttpStatus.BAD_REQUEST),
     B6_KPI_WEIGHT_TOTAL_INVALID("B6_KPI_WEIGHT_TOTAL_INVALID", "KPI weights under each final objective must equal the objective weight", HttpStatus.BAD_REQUEST),
-    B6_WEIGHT_MUST_BE_POSITIVE("B6_WEIGHT_MUST_BE_POSITIVE", "Weight must be greater than 0", HttpStatus.BAD_REQUEST);
+    B6_WEIGHT_MUST_BE_POSITIVE("B6_WEIGHT_MUST_BE_POSITIVE", "Weight must be greater than 0", HttpStatus.BAD_REQUEST),
+
+    B7_KPI_MEASUREMENT_MISSING("B7_KPI_MEASUREMENT_MISSING", "Every weighted department KPI must have one active measurement", HttpStatus.BAD_REQUEST),
+    B7_UNIT_REQUIRED("B7_UNIT_REQUIRED", "Measurement unit is required", HttpStatus.BAD_REQUEST),
+    B7_TARGET_REQUIRED("B7_TARGET_REQUIRED", "Target value is required", HttpStatus.BAD_REQUEST),
+    B7_DIRECTION_REQUIRED("B7_DIRECTION_REQUIRED", "KPI direction is required", HttpStatus.BAD_REQUEST),
+    B7_REPORTING_FREQUENCY_REQUIRED("B7_REPORTING_FREQUENCY_REQUIRED", "Reporting frequency is required", HttpStatus.BAD_REQUEST),
+    B7_THRESHOLD_INVALID("B7_THRESHOLD_INVALID", "Measurement thresholds are invalid", HttpStatus.BAD_REQUEST),
+    B7_KPI_WEIGHT_REQUIRED("B7_KPI_WEIGHT_REQUIRED", "Department KPI must have a valid KPI weight before measurement", HttpStatus.BAD_REQUEST),
+    B7_REPORT_OWNER_INVALID("B7_REPORT_OWNER_INVALID", "Report owner is invalid for this BSC strategy", HttpStatus.BAD_REQUEST);
 
     private final String code;
     private final String message;
