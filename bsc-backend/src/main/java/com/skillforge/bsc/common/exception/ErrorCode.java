@@ -87,7 +87,15 @@ public enum ErrorCode {
     B5_DEPARTMENT_HEAD_INVALID("B5_DEPARTMENT_HEAD_INVALID", "Department head is invalid for department participation", HttpStatus.BAD_REQUEST),
     B5_FINAL_OBJECTIVE_REQUIRED("B5_FINAL_OBJECTIVE_REQUIRED", "At least one final strategic objective is required for B5", HttpStatus.BAD_REQUEST),
     B5_PARTICIPATION_REQUIRED("B5_PARTICIPATION_REQUIRED", "Each final objective must have at least one active department participation", HttpStatus.BAD_REQUEST),
-    B5_KPI_REQUIRED("B5_KPI_REQUIRED", "Each final objective and participation must have at least one active department KPI", HttpStatus.BAD_REQUEST);
+    B5_KPI_REQUIRED("B5_KPI_REQUIRED", "Each final objective and participation must have at least one active department KPI", HttpStatus.BAD_REQUEST),
+
+    B6_PERSPECTIVE_WEIGHT_MISSING("B6_PERSPECTIVE_WEIGHT_MISSING", "All 4 BSC perspectives must have weights", HttpStatus.BAD_REQUEST),
+    B6_TOTAL_PERSPECTIVE_WEIGHT_INVALID("B6_TOTAL_PERSPECTIVE_WEIGHT_INVALID", "Total perspective weight must equal 100", HttpStatus.BAD_REQUEST),
+    B6_OBJECTIVE_WEIGHT_MISSING("B6_OBJECTIVE_WEIGHT_MISSING", "Every active final strategic objective must have one weight", HttpStatus.BAD_REQUEST),
+    B6_OBJECTIVE_WEIGHT_TOTAL_INVALID("B6_OBJECTIVE_WEIGHT_TOTAL_INVALID", "Objective weights in each perspective must equal the perspective weight", HttpStatus.BAD_REQUEST),
+    B6_KPI_WEIGHT_MISSING("B6_KPI_WEIGHT_MISSING", "Every active department KPI must have one weight", HttpStatus.BAD_REQUEST),
+    B6_KPI_WEIGHT_TOTAL_INVALID("B6_KPI_WEIGHT_TOTAL_INVALID", "KPI weights under each final objective must equal the objective weight", HttpStatus.BAD_REQUEST),
+    B6_WEIGHT_MUST_BE_POSITIVE("B6_WEIGHT_MUST_BE_POSITIVE", "Weight must be greater than 0", HttpStatus.BAD_REQUEST);
 
     private final String code;
     private final String message;

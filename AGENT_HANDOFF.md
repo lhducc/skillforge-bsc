@@ -40,6 +40,7 @@ Important backend areas:
   V5__create_b3_strategy_selection_tables.sql
   V6__create_b4_strategy_map_tables.sql
   V7__create_b5_fishbone_tables.sql
+  V8__create_b6_weight_allocation_tables.sql
 
 Notes:
 * `V1__init_core_tables.sql` currently contains the initial Flyway health/check setup.
@@ -49,6 +50,7 @@ Notes:
 * `V5__create_b3_strategy_selection_tables.sql` contains the Phase 4 B3 Strategy Selection schema.
 * `V6__create_b4_strategy_map_tables.sql` contains the Phase 5 B4 Strategy Map schema.
 * `V7__create_b5_fishbone_tables.sql` contains the Phase 6 B5 Fishbone / Department KPI schema.
+* `V8__create_b6_weight_allocation_tables.sql` contains the Phase 7 B6 Weight Allocation schema.
 ```
 
 ## Completed Phases
@@ -60,6 +62,7 @@ Notes:
 - Phase 4 B3 Strategy Selection: DONE
 - Phase 5 B4 Strategy Map: DONE
 - Phase 6 B5 Fishbone / Department KPI: DONE
+- Phase 7 B6 Weight Allocation: DONE
 
 ## Phase 1 Branch And Tag
 
@@ -317,6 +320,43 @@ Notes:
 - `GET /api/v1/bsc-strategies/{strategyId}/fishbone/departments/{departmentId}`
 - `POST /api/v1/bsc-strategies/{strategyId}/fishbone/complete`
 
+## Phase 7 Branch
+
+- Branch: `phase/7-b6-weight-allocation`
+- Status: implemented and tested locally.
+
+## Phase 7 Validation Summary
+
+- Maven compile/test passed.
+- App startup passed.
+- Swagger B6 happy case passed.
+- Perspective/objective/KPI weight upsert works.
+- Get weight tree works.
+- Complete B6 updates `B6_WEIGHT_ALLOCATION = COMPLETED`.
+- Complete B6 unlocks `B7_MEASUREMENT_TARGET = NOT_STARTED`.
+- B6 validates B5 completed.
+- B6 validates strategy `DRAFT`.
+- B6 validates all weights are positive.
+- B6 validates 4 perspective total = 100.
+- B6 validates objective total per perspective = perspective weight.
+- B6 validates KPI total per objective = objective weight.
+- B6 uses `BigDecimal`/`DECIMAL`, not `float`/`double`.
+- B6 does not create B7 measurements, B8 action plans/tasks/reports, dashboard data, or security logic.
+
+## Implemented Phase 7 Tables
+
+- `perspective_weights`
+- `objective_weights`
+- `kpi_weights`
+
+## Implemented Phase 7 APIs
+
+- `PUT /api/v1/bsc-strategies/{strategyId}/weights/perspectives`
+- `PUT /api/v1/bsc-strategies/{strategyId}/weights/objectives`
+- `PUT /api/v1/bsc-strategies/{strategyId}/weights/kpis`
+- `GET /api/v1/bsc-strategies/{strategyId}/weights/tree`
+- `POST /api/v1/bsc-strategies/{strategyId}/weights/complete`
+
 ## Current Technical Notes
 
 - Use Flyway for all schema changes.
@@ -338,27 +378,17 @@ Notes:
 - B5 does not create B7 measurements.
 - B5 does not create B8 action plans/tasks/reports.
 - B5 does not implement Security/JWT/RBAC/CORS.
+- B6 reads source data from `final_strategic_objectives` produced by B4 and `department_kpis` produced by B5.
+- B6 writes only weight allocation data.
+- B6 does not create B7 measurements.
+- B6 does not create B8 action plans/tasks/reports.
+- B6 does not create dashboard data.
+- B6 does not implement Security/JWT/RBAC/CORS.
 
 ## Next Phase
 
-- Next Phase: Phase 7 - B6 Weight Allocation
-- Expected branch: `phase/7-b6-weight-allocation`
-- Expected Phase 7 scope:
-  - Module: B6 Weight Allocation
-  - Tables:
-    - `perspective_weights`
-    - `objective_weights`
-    - `kpi_weights`
-  - APIs:
-    - Upsert perspective weights
-    - Upsert objective weights
-    - Upsert KPI weights
-    - Get weight tree
-    - Complete B6
-  - Core rules:
-    - All weights are absolute percentages on total BSC 100%, not relative child percentages.
-    - Use BigDecimal/DECIMAL, not float/double.
-    - Complete B6 unlocks B7.
+- Next Phase: Phase 8 - B7 KPI Measurement
+- Expected branch: `phase/8-b7-kpi-measurement`
 
 ## Working Rules For Future Codex Sessions
 
