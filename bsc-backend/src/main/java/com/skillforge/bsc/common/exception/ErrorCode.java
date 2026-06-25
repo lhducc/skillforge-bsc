@@ -104,7 +104,32 @@ public enum ErrorCode {
     B7_REPORTING_FREQUENCY_REQUIRED("B7_REPORTING_FREQUENCY_REQUIRED", "Reporting frequency is required", HttpStatus.BAD_REQUEST),
     B7_THRESHOLD_INVALID("B7_THRESHOLD_INVALID", "Measurement thresholds are invalid", HttpStatus.BAD_REQUEST),
     B7_KPI_WEIGHT_REQUIRED("B7_KPI_WEIGHT_REQUIRED", "Department KPI must have a valid KPI weight before measurement", HttpStatus.BAD_REQUEST),
-    B7_REPORT_OWNER_INVALID("B7_REPORT_OWNER_INVALID", "Report owner is invalid for this BSC strategy", HttpStatus.BAD_REQUEST);
+    B7_REPORT_OWNER_INVALID("B7_REPORT_OWNER_INVALID", "Report owner is invalid for this BSC strategy", HttpStatus.BAD_REQUEST),
+
+    B8_ACTION_PLAN_NOT_FOUND("B8_ACTION_PLAN_NOT_FOUND", "Action plan not found", HttpStatus.NOT_FOUND),
+    B8_ACTION_PLAN_NAME_REQUIRED("B8_ACTION_PLAN_NAME_REQUIRED", "Action plan name must not be blank", HttpStatus.BAD_REQUEST),
+    B8_ACTION_PLAN_DATE_INVALID("B8_ACTION_PLAN_DATE_INVALID", "Action plan start date must not be after end date", HttpStatus.BAD_REQUEST),
+    B8_ACTION_PLAN_OWNER_INVALID("B8_ACTION_PLAN_OWNER_INVALID", "Action plan owner is invalid", HttpStatus.BAD_REQUEST),
+    B8_ACTION_PLAN_KPI_INVALID("B8_ACTION_PLAN_KPI_INVALID", "Action plan must belong to a measured department KPI in the current BSC strategy", HttpStatus.BAD_REQUEST),
+    B8_ACTION_PLAN_REQUIRED("B8_ACTION_PLAN_REQUIRED", "At least one valid action plan is required for B8 setup", HttpStatus.BAD_REQUEST),
+    B8_MEASURED_KPI_INVALID("B8_MEASURED_KPI_INVALID", "Department KPI must belong to the current strategy and have an active B7 measurement", HttpStatus.BAD_REQUEST),
+
+    B8_TASK_NOT_FOUND("B8_TASK_NOT_FOUND", "Task not found", HttpStatus.NOT_FOUND),
+    B8_TASK_NAME_REQUIRED("B8_TASK_NAME_REQUIRED", "Task name must not be blank", HttpStatus.BAD_REQUEST),
+    B8_TASK_MUST_BELONG_TO_ACTION_PLAN("B8_TASK_MUST_BELONG_TO_ACTION_PLAN", "Task must belong to an action plan", HttpStatus.BAD_REQUEST),
+    B8_TASK_ASSIGNEE_INVALID("B8_TASK_ASSIGNEE_INVALID", "Task assignee is invalid", HttpStatus.BAD_REQUEST),
+    B8_TASK_DATE_INVALID("B8_TASK_DATE_INVALID", "Task start date must not be after due date", HttpStatus.BAD_REQUEST),
+    B8_TASK_INVALID_STATUS_TRANSITION("B8_TASK_INVALID_STATUS_TRANSITION", "Task status transition is invalid", HttpStatus.BAD_REQUEST),
+    B8_BLOCK_REASON_REQUIRED("B8_BLOCK_REASON_REQUIRED", "Block reason is required when task status is BLOCKED", HttpStatus.BAD_REQUEST),
+    B8_TASK_REQUIRED("B8_TASK_REQUIRED", "Every existing action plan must have at least one task", HttpStatus.BAD_REQUEST),
+    B8_TRACEABILITY_INVALID("B8_TRACEABILITY_INVALID", "B8 data must trace to the current BSC strategy", HttpStatus.BAD_REQUEST),
+
+    B8_KPI_REPORT_NOT_FOUND("B8_KPI_REPORT_NOT_FOUND", "KPI report not found", HttpStatus.NOT_FOUND),
+    B8_KPI_REPORT_ACTUAL_REQUIRED("B8_KPI_REPORT_ACTUAL_REQUIRED", "KPI report actual value is required and must be greater than or equal to 0", HttpStatus.BAD_REQUEST),
+    B8_KPI_REPORT_PERIOD_REQUIRED("B8_KPI_REPORT_PERIOD_REQUIRED", "KPI report reporting period must not be blank", HttpStatus.BAD_REQUEST),
+    B8_KPI_REPORT_DUPLICATED_PERIOD("B8_KPI_REPORT_DUPLICATED_PERIOD", "KPI report already exists for the same KPI and reporting period", HttpStatus.BAD_REQUEST),
+    B8_KPI_REPORT_REVIEW_STATUS_INVALID("B8_KPI_REPORT_REVIEW_STATUS_INVALID", "KPI report review status is invalid", HttpStatus.BAD_REQUEST),
+    B8_KPI_REPORT_REVIEWER_INVALID("B8_KPI_REPORT_REVIEWER_INVALID", "KPI report reviewer is invalid", HttpStatus.BAD_REQUEST);
 
     private final String code;
     private final String message;

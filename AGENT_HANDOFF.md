@@ -42,6 +42,7 @@ Important backend areas:
   V7__create_b5_fishbone_tables.sql
   V8__create_b6_weight_allocation_tables.sql
   V9__create_b7_kpi_measurement_tables.sql
+  V10__create_b8_execution_report_tables.sql
 
 Notes:
 * `V1__init_core_tables.sql` currently contains the initial Flyway health/check setup.
@@ -53,6 +54,7 @@ Notes:
 * `V7__create_b5_fishbone_tables.sql` contains the Phase 6 B5 Fishbone / Department KPI schema.
 * `V8__create_b6_weight_allocation_tables.sql` contains the Phase 7 B6 Weight Allocation schema.
 * `V9__create_b7_kpi_measurement_tables.sql` contains the Phase 8 B7 KPI Measurement & Target schema.
+* `V10__create_b8_execution_report_tables.sql` contains the Phase 9 B8 Execution / Action Plan / Task / KPI Report schema.
 ```
 
 ## Completed Phases
@@ -66,6 +68,7 @@ Notes:
 - Phase 6 B5 Fishbone / Department KPI: DONE
 - Phase 7 B6 Weight Allocation: DONE
 - Phase 8 B7 KPI Measurement & Target: DONE
+- Phase 9 B8 Execution / Action Plan / Task / KPI Report: DONE
 
 ## Phase 1 Branch And Tag
 
@@ -408,6 +411,62 @@ Notes:
 
 - `V9__create_b7_kpi_measurement_tables.sql`
 
+## Phase 9 Branch
+
+- Branch: `phase/9-b8-execution-task-report`
+- Status: implemented and tested locally.
+
+## Phase 9 Validation Summary
+
+- Maven clean compile passed with UTC timezone command using local Maven.
+- Maven test passed with UTC timezone command using local Maven.
+- App startup passed during Spring Boot test context.
+- Flyway validated 10 migrations and schema version 10.
+- B8 action plan create/update/list APIs implemented.
+- B8 task create/status update APIs implemented.
+- B8 Kanban and Gantt read APIs implemented from task data.
+- B8 KPI report create/list/review APIs implemented.
+- B8 strategy-level KPI report list supports optional filters.
+- Complete B8 setup validates B7 completed.
+- Complete B8 setup uses relaxed MVP validation: at least one valid action plan under a measured KPI, every existing action plan has at least one task, and B8 records trace to the current BSC Strategy.
+- Action plans validate measured KPI traceability, nonblank name, date range, and valid same-company/same-department owner.
+- Tasks validate action plan traceability, nonblank name, same-department assignee, date range, status flow, and block reason.
+- Task comments use `actor_employee_id` instead of `user_id` because Phase 9 has no Security/JWT current-user context.
+- KPI reports validate measured KPI traceability, `actualValue >= 0`, nonblank reporting period, and no duplicate KPI + period.
+- KPI report creation defaults to `SUBMITTED` and only allows `DRAFT` or `SUBMITTED`; `APPROVED` and `REJECTED` are only set through review.
+- Server calculates KPI report `completionRate`, `statusColor`, and `achievementStatus`.
+- Divide-by-zero is handled deterministically without artificial values such as `100.001`.
+- B8 uses `BigDecimal`/`DECIMAL`, not `float`/`double`, for business numeric values.
+- B8 does not implement Phase 10 dashboard, Security/JWT/RBAC/CORS, notifications, file storage, or advanced formula engine.
+- The Maven wrapper command failed in this environment before Maven startup; local `mvn` was used for successful compile/test validation.
+
+## Implemented Phase 9 Tables
+
+- `action_plans`
+- `tasks`
+- `task_dependencies`
+- `task_comments`
+- `kpi_reports`
+
+## Implemented Phase 9 APIs
+
+- `POST /api/v1/action-plans`
+- `PUT /api/v1/action-plans/{actionPlanId}`
+- `GET /api/v1/bsc-strategies/{strategyId}/action-plans`
+- `POST /api/v1/tasks`
+- `PATCH /api/v1/tasks/{taskId}/status`
+- `GET /api/v1/bsc-strategies/{strategyId}/tasks/kanban`
+- `GET /api/v1/bsc-strategies/{strategyId}/tasks/gantt`
+- `POST /api/v1/kpi-reports`
+- `GET /api/v1/bsc-strategies/{strategyId}/kpi-reports`
+- `GET /api/v1/department-kpis/{departmentKpiId}/reports`
+- `PATCH /api/v1/kpi-reports/{reportId}/review`
+- `POST /api/v1/bsc-strategies/{strategyId}/action-plan/complete`
+
+## Phase 9 Migration
+
+- `V10__create_b8_execution_report_tables.sql`
+
 ## Current Technical Notes
 
 - Use Flyway for all schema changes.
@@ -444,11 +503,25 @@ Notes:
 - B7 does not create B8 action plans/tasks/reports.
 - B7 does not create dashboard data.
 - B7 does not implement Security/JWT/RBAC/CORS.
+- B8 reads source data from `department_kpis`, `kpi_measurements`, and BSC workflow step statuses.
+- B8 writes action plan, task, task dependency/comment, and KPI report data only.
+- B8 data keeps denormalized traceability fields: `bsc_strategy_id`, `department_kpi_id`, `final_strategic_objective_id`, and `department_id`.
+- B8 task comments use `actor_employee_id` for Swagger/MVP testing without Security/JWT current-user lookup.
+- B8 action plans and tasks derive strategy/objective/department/KPI traceability from measured KPIs and action plans, not from free request fields.
+- B8 KPI reports store calculated `completion_rate`, `status_color`, and `achievement_status`.
+- B8 KPI report creation only allows `DRAFT` or `SUBMITTED`; report review owns `APPROVED` and `REJECTED`.
+- B8 completion does not unlock or implement any Phase 10 dashboard behavior.
+- Dashboard Basic should read from B6 weights, B7 measurements, and B8 KPI reports/tasks/action plans.
+- Dashboard Basic should keep KPI performance separate from task/work progress.
+- Dashboard Basic should cap score contribution at 100% when calculating weighted score, while still showing raw completion rate.
+- Dashboard Basic must handle missing KPI reports and divide-by-zero cases safely.
+- Phase 10 should not mutate B6/B7/B8 source data while calculating dashboard responses.
+- Continue avoiding Security/JWT/RBAC/CORS, notifications, file upload/storage, and advanced formula engine unless explicitly requested.
 
 ## Next Phase
 
-- Next Phase: Phase 9 - B8 Execution / Action Plan / Task / KPI Report
-- Expected branch: `phase/9-b8-execution-task-report`
+- Next Phase: Phase 10 - Dashboard Basic
+- Expected branch: `phase/10-dashboard-basic`
 
 ## Working Rules For Future Codex Sessions
 
