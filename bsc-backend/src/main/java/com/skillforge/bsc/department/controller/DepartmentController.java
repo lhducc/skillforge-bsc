@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,5 +50,12 @@ public class DepartmentController {
             @Valid @RequestBody UpdateDepartmentRequest request
     ) {
         return ApiResponse.success(departmentService.update(departmentId, request));
+    }
+
+    @DeleteMapping("/departments/{departmentId}")
+    @Operation(summary = "Delete department (soft delete)")
+    public ApiResponse<Void> delete(@PathVariable UUID departmentId) {
+        departmentService.delete(departmentId);
+        return ApiResponse.success(null);
     }
 }

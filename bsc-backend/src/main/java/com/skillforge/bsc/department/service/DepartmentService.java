@@ -48,8 +48,16 @@ public class DepartmentService {
         companyService.getCompany(companyId);
         return departmentRepository.findByCompanyId(companyId)
                 .stream()
+                .filter(d -> d.getStatus() == DepartmentStatus.ACTIVE)
                 .map(departmentMapper::toResponse)
                 .toList();
+    }
+
+    @Transactional
+    public void delete(UUID departmentId) {
+        Department department = getDepartment(departmentId);
+        department.setStatus(DepartmentStatus.INACTIVE);
+        departmentRepository.save(department);
     }
 
     @Transactional

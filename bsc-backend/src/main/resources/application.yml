@@ -8,7 +8,7 @@ spring:
     name: bsc-skillforge-backend
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/bsc_skillforge
+    url: jdbc:postgresql://localhost:5432/bsc_skillforge?TimeZone=Asia/Ho_Chi_Minh
     username: bsc_user
     password: bsc_password
     driver-class-name: org.postgresql.Driver

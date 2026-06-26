@@ -59,6 +59,7 @@ public class EmployeeService {
 
         return employeeRepository.findByCompanyId(companyId)
                 .stream()
+                .filter(e -> e.getStatus() == EmployeeStatus.ACTIVE)
                 .map(employeeMapper::toResponse)
                 .toList();
     }
@@ -75,6 +76,13 @@ public class EmployeeService {
         employee.setPositionTitle(normalize(request.getPositionTitle()));
 
         return employeeMapper.toResponse(employeeRepository.save(employee));
+    }
+
+    @Transactional
+    public void delete(UUID employeeId) {
+        Employee employee = getEmployee(employeeId);
+        employee.setStatus(EmployeeStatus.INACTIVE);
+        employeeRepository.save(employee);
     }
 
     @Transactional(readOnly = true)
