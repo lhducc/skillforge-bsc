@@ -14,5 +14,7 @@ public interface KpiMeasurementRepository extends JpaRepository<KpiMeasurement, 
 
     List<KpiMeasurement> findByBscStrategy_Id(UUID bscStrategyId);
 
+    List<KpiMeasurement> findByBscStrategy_IdAndStatus(UUID bscStrategyId, MeasurementStatus status);
+
     long countByBscStrategy_IdAndStatus(UUID bscStrategyId, MeasurementStatus status);
 }

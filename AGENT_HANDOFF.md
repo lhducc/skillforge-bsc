@@ -69,8 +69,7 @@ Notes:
 - Phase 7 B6 Weight Allocation: DONE
 - Phase 8 B7 KPI Measurement & Target: DONE
 - Phase 9 B8 Execution / Action Plan / Task / KPI Report: DONE
-- Phase 10 Dashboard Basic: tagged `phase-10-complete`
-- Phase 11 Security Basic / JWT / RBAC / CORS: IMPLEMENTED LOCALLY, NOT COMMITTED
+- Phase 10 Dashboard Basic: DONE
 
 ## Phase 1 Branch And Tag
 
@@ -469,42 +468,41 @@ Notes:
 
 - `V10__create_b8_execution_report_tables.sql`
 
-## Phase 11 Branch
+## Phase 10 Branch
 
-- Branch: `phase/11-security-jwt-rbac-cors`
-- Base: `phase-10-complete`
-- Status: implemented and tested locally; not committed, pushed, merged, or tagged.
+- Branch: `phase/10-dashboard-basic`
+- Status: implemented and tested locally.
 
-## Phase 11 Validation Summary
+## Phase 10 Validation Summary
 
-- Added `POST /api/v1/auth/login` and `GET /api/v1/auth/me` using the shared `ApiResponse` envelope.
-- Login authenticates `user_accounts.email` case-insensitively with BCrypt and rejects inactive/locked accounts and inactive employees.
-- User account creation uses the shared BCrypt `PasswordEncoder`; passwords and password hashes are never returned.
-- JWT access tokens are signed with HS256, default to 86,400 seconds, and are revalidated against the current account/employee status on every request.
-- Added stateless Spring Security, JWT filter, JSON 401/403 handlers, coarse endpoint-level RBAC, and deny-by-default handling for unmatched APIs.
-- Added configurable CORS through `CORS_ALLOWED_ORIGINS`; local defaults are `http://localhost:5173` and `http://localhost:3000`.
-- Added OpenAPI Bearer JWT security; `/auth/login`, Swagger/OpenAPI, health, and CORS preflight are public.
-- Added auth error codes: `AUTH_INVALID_CREDENTIALS`, `AUTH_ACCOUNT_DISABLED`, `AUTH_TOKEN_INVALID`, `AUTH_TOKEN_EXPIRED`, `AUTH_ACCESS_DENIED`, and `AUTH_UNAUTHORIZED`.
-- No Flyway migration was needed because `user_accounts.password_hash`, role, status, and employee linkage already support Phase 11.
-- `mvn "-Duser.timezone=UTC" test` passed: 14 tests, 0 failures/errors.
-- Database-backed integration coverage creates an account through the real service, verifies BCrypt storage, logs in, calls `/auth/me`, accesses a protected API with the JWT, and verifies the OpenAPI Bearer scheme.
-- Web security coverage verifies missing/invalid token 401 responses, invalid-role 403, valid-role access, and localhost CORS preflight.
+- Maven test/build passed.
+- App startup passed.
+- Swagger Dashboard API flow passed.
+- Company dashboard works.
+- Objective dashboard works.
+- Department dashboard works.
+- KPI detail dashboard works.
+- Dashboard handles missing KPI report/measurement safely.
+- Dashboard handles divide-by-zero safely.
+- KPI performance is separated from task/work progress.
+- Scores are calculated from KPI weighted scores, not average completion rates.
 
-## Implemented Phase 11 APIs
+## Implemented Phase 10 APIs
 
-- `POST /api/v1/auth/login`
-- `GET /api/v1/auth/me`
+- `GET /api/v1/dashboard/bsc-strategies/{strategyId}`
+- `GET /api/v1/dashboard/bsc-strategies/{strategyId}/objectives`
+- `GET /api/v1/dashboard/bsc-strategies/{strategyId}/departments/{departmentId}`
+- `GET /api/v1/dashboard/department-kpis/{departmentKpiId}`
 
-## Phase 11 Security Boundaries
+## MVP Completion Note
 
-- `COMPANY_ADMIN`: company, department, employee, and user-account setup endpoints.
-- `CEO`: BSC strategy creation, B1-B4, B6-B7, company-level B5 reads, B5/B8 reads, workflow summaries, and reserved dashboard reads.
-- `DEPARTMENT_HEAD`: B5 operations, B8 action plan/task/report operations, department B5/B8 reads, workflow summaries, and reserved dashboard reads.
-- `EMPLOYEE`: assigned-task Kanban reads and assigned-task status updates. Employee Kanban is forced to the authenticated employee ID and employee task updates use the authenticated employee as actor; Gantt remains CEO/department-head only.
-- `SYSTEM_ADMIN`: no strategic-data access is granted because there are currently no monitoring/admin endpoints.
-- Existing service-level same-company/same-department checks remain authoritative; Phase 11 does not add multi-tenant isolation or a permission table.
-- A clean deployment must provision the first `COMPANY_ADMIN` account through controlled seed/DB setup; account creation is not exposed as a public bootstrap endpoint.
-- No dashboard controller/source is present in the current checkout; `/bsc-strategies/{id}/dashboard/**` is reserved in RBAC for CEO/department-head reads when that API exists.
+- Core backend MVP is complete through Phase 10.
+- The full BSC flow is now implemented from company setup through B1-B8 and Dashboard Basic.
+- Next recommended work:
+  - Security Basic / JWT / Role Guard / CORS
+  - Demo seed data polish
+  - FE integration support
+  - Deployment preparation
 
 ## Current Technical Notes
 
@@ -557,11 +555,12 @@ Notes:
 - Phase 10 should not mutate B6/B7/B8 source data while calculating dashboard responses.
 - Continue avoiding advanced permission matrices, refresh-token rotation, multi-tenant SaaS isolation, notifications, file upload/storage, and advanced formula engines unless explicitly requested.
 
-## Next Phase
+## Post-MVP Recommended Work
 
-- Recommended next phase: Phase 12 - MVP end-to-end hardening and release readiness.
-- Suggested branch: `phase/12-mvp-hardening-e2e`.
-- Focus: verify authenticated B1-B8 flows by role, close only demonstrated ownership gaps, add deployment-safe secret/account bootstrap documentation, and reconcile the missing dashboard source with `phase-10-complete` before release.
+- Security Basic / JWT / Role Guard / CORS
+- Demo seed data polish
+- FE integration support
+- Deployment preparation
 
 ## Working Rules For Future Codex Sessions
 
