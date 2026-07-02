@@ -69,6 +69,7 @@ Notes:
 - Phase 7 B6 Weight Allocation: DONE
 - Phase 8 B7 KPI Measurement & Target: DONE
 - Phase 9 B8 Execution / Action Plan / Task / KPI Report: DONE
+- Phase 10 Dashboard Basic: DONE
 
 ## Phase 1 Branch And Tag
 
@@ -467,6 +468,42 @@ Notes:
 
 - `V10__create_b8_execution_report_tables.sql`
 
+## Phase 10 Branch
+
+- Branch: `phase/10-dashboard-basic`
+- Status: implemented and tested locally.
+
+## Phase 10 Validation Summary
+
+- Maven test/build passed.
+- App startup passed.
+- Swagger Dashboard API flow passed.
+- Company dashboard works.
+- Objective dashboard works.
+- Department dashboard works.
+- KPI detail dashboard works.
+- Dashboard handles missing KPI report/measurement safely.
+- Dashboard handles divide-by-zero safely.
+- KPI performance is separated from task/work progress.
+- Scores are calculated from KPI weighted scores, not average completion rates.
+
+## Implemented Phase 10 APIs
+
+- `GET /api/v1/dashboard/bsc-strategies/{strategyId}`
+- `GET /api/v1/dashboard/bsc-strategies/{strategyId}/objectives`
+- `GET /api/v1/dashboard/bsc-strategies/{strategyId}/departments/{departmentId}`
+- `GET /api/v1/dashboard/department-kpis/{departmentKpiId}`
+
+## MVP Completion Note
+
+- Core backend MVP is complete through Phase 10.
+- The full BSC flow is now implemented from company setup through B1-B8 and Dashboard Basic.
+- Next recommended work:
+  - Security Basic / JWT / Role Guard / CORS
+  - Demo seed data polish
+  - FE integration support
+  - Deployment preparation
+
 ## Current Technical Notes
 
 - Use Flyway for all schema changes.
@@ -518,10 +555,12 @@ Notes:
 - Phase 10 should not mutate B6/B7/B8 source data while calculating dashboard responses.
 - Continue avoiding Security/JWT/RBAC/CORS, notifications, file upload/storage, and advanced formula engine unless explicitly requested.
 
-## Next Phase
+## Post-MVP Recommended Work
 
-- Next Phase: Phase 10 - Dashboard Basic
-- Expected branch: `phase/10-dashboard-basic`
+- Security Basic / JWT / Role Guard / CORS
+- Demo seed data polish
+- FE integration support
+- Deployment preparation
 
 ## Working Rules For Future Codex Sessions
 
