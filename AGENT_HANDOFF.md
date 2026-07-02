@@ -553,7 +553,7 @@ Notes:
 - Dashboard Basic should cap score contribution at 100% when calculating weighted score, while still showing raw completion rate.
 - Dashboard Basic must handle missing KPI reports and divide-by-zero cases safely.
 - Phase 10 should not mutate B6/B7/B8 source data while calculating dashboard responses.
-- Continue avoiding Security/JWT/RBAC/CORS, notifications, file upload/storage, and advanced formula engine unless explicitly requested.
+- Continue avoiding advanced permission matrices, refresh-token rotation, multi-tenant SaaS isolation, notifications, file upload/storage, and advanced formula engines unless explicitly requested.
 
 ## Post-MVP Recommended Work
 

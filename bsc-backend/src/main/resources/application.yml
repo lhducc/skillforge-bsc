@@ -7,6 +7,9 @@ spring:
   application:
     name: bsc-skillforge-backend
 
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+
   datasource:
     url: jdbc:postgresql://localhost:5432/bsc_skillforge?TimeZone=Asia/Ho_Chi_Minh
     username: bsc_user
@@ -32,3 +35,12 @@ springdoc:
 logging:
   level:
     org.hibernate.SQL: debug
+
+app:
+  security:
+    jwt:
+      # Override in non-local environments. The value must be a Base64-encoded key of at least 256 bits.
+      secret: ${JWT_SECRET:c2tpbGxmb3JnZS1sb2NhbC1qd3Qtc2VjcmV0LWtleS0yMDI2}
+      expiration-seconds: ${JWT_EXPIRATION_SECONDS:86400}
+    cors:
+      allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:3000}

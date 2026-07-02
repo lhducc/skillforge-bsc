@@ -11,12 +11,12 @@ import com.skillforge.bsc.common.exception.ErrorCode;
 import com.skillforge.bsc.user.entity.Employee;
 import com.skillforge.bsc.user.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -25,13 +25,13 @@ public class UserAccountService {
     private final UserAccountRepository userAccountRepository;
     private final EmployeeService employeeService;
     private final UserAccountMapper userAccountMapper;
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserAccountResponse create(UUID employeeId, CreateUserAccountRequest request) {
         Employee employee = employeeService.getEmployee(employeeId);
-        String email = normalizeRequired(request.getEmail(), "email");
-        if (userAccountRepository.existsByEmail(email)) {
+        String email = normalizeRequired(request.getEmail(), "email").toLowerCase(Locale.ROOT);
+        if (userAccountRepository.existsByEmailIgnoreCase(email)) {
             throw new BusinessException(ErrorCode.USER_ACCOUNT_EMAIL_DUPLICATED);
         }
         if (userAccountRepository.findByEmployeeId(employeeId).isPresent()) {

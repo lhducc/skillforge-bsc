@@ -5,6 +5,12 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum ErrorCode {
+    AUTH_INVALID_CREDENTIALS("AUTH_INVALID_CREDENTIALS", "Invalid email or password", HttpStatus.UNAUTHORIZED),
+    AUTH_ACCOUNT_DISABLED("AUTH_ACCOUNT_DISABLED", "User account is inactive or locked", HttpStatus.UNAUTHORIZED),
+    AUTH_TOKEN_INVALID("AUTH_TOKEN_INVALID", "Authentication token is invalid", HttpStatus.UNAUTHORIZED),
+    AUTH_TOKEN_EXPIRED("AUTH_TOKEN_EXPIRED", "Authentication token has expired", HttpStatus.UNAUTHORIZED),
+    AUTH_ACCESS_DENIED("AUTH_ACCESS_DENIED", "Access denied", HttpStatus.FORBIDDEN),
+    AUTH_UNAUTHORIZED("AUTH_UNAUTHORIZED", "Authentication is required", HttpStatus.UNAUTHORIZED),
 
     VALIDATION_ERROR("VALIDATION_ERROR", "Validation error", HttpStatus.BAD_REQUEST),
     RESOURCE_NOT_FOUND("RESOURCE_NOT_FOUND", "Resource not found", HttpStatus.NOT_FOUND),
