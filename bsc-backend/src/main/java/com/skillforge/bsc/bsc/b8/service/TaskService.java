@@ -1,5 +1,7 @@
 package com.skillforge.bsc.bsc.b8.service;
 
+import com.skillforge.bsc.auth.security.CurrentUser;
+import com.skillforge.bsc.auth.security.CurrentUserProvider;
 import com.skillforge.bsc.bsc.b7.entity.KpiMeasurement;
 import com.skillforge.bsc.bsc.b8.dto.request.CreateTaskRequest;
 import com.skillforge.bsc.bsc.b8.dto.request.UpdateTaskStatusRequest;
@@ -21,6 +23,7 @@ import com.skillforge.bsc.bsc.b8.repository.TaskDependencyRepository;
 import com.skillforge.bsc.bsc.b8.repository.TaskRepository;
 import com.skillforge.bsc.common.enums.TaskDependencyType;
 import com.skillforge.bsc.common.enums.TaskStatus;
+import com.skillforge.bsc.common.enums.UserRole;
 import com.skillforge.bsc.common.exception.BusinessException;
 import com.skillforge.bsc.common.exception.ErrorCode;
 import com.skillforge.bsc.user.entity.Employee;
@@ -55,6 +58,7 @@ public class TaskService {
     private final TaskDependencyRepository taskDependencyRepository;
     private final TaskCommentRepository taskCommentRepository;
     private final TaskMapper taskMapper;
+    private final CurrentUserProvider currentUserProvider;
 
     @Transactional
     public TaskResponse create(CreateTaskRequest request) {
@@ -110,17 +114,22 @@ public class TaskService {
     public TaskResponse updateStatus(UUID taskId, UpdateTaskStatusRequest request) {
         Task task = getTask(taskId);
         validationService.ensureB8Accessible(task.getBscStrategy().getId());
+        CurrentUser currentUser = currentUserProvider.getCurrentUser().orElse(null);
+        enforceEmployeeAssignment(currentUser, task);
         TaskStatus oldStatus = task.getStatus();
         TaskStatus newStatus = request.getNewStatus();
         validateTransition(oldStatus, newStatus);
 
         String blockReason = validateBlockReason(newStatus, request.getBlockReason());
-        Employee actor = request.getActorEmployeeId() == null
+        UUID actorEmployeeId = currentUser != null && currentUser.role() == UserRole.EMPLOYEE
+                ? currentUser.employeeId()
+                : request.getActorEmployeeId();
+        Employee actor = actorEmployeeId == null
                 ? null
                 : validationService.getValidEmployeeInDepartment(
                         task.getBscStrategy(),
                         task.getDepartment(),
-                        request.getActorEmployeeId(),
+                        actorEmployeeId,
                         ErrorCode.B8_TASK_ASSIGNEE_INVALID
                 );
 
@@ -148,10 +157,11 @@ public class TaskService {
             UUID departmentKpiId
     ) {
         validationService.getStrategy(strategyId);
+        UUID effectiveAssigneeId = resolveEmployeeAssigneeFilter(assigneeId);
         Map<TaskStatus, List<TaskResponse>> tasksByStatus = filteredTasks(
                 strategyId,
                 departmentId,
-                assigneeId,
+                effectiveAssigneeId,
                 actionPlanId,
                 departmentKpiId
         ).stream()
@@ -172,7 +182,7 @@ public class TaskService {
         return KanbanResponse.builder()
                 .bscStrategyId(strategyId)
                 .departmentId(departmentId)
-                .assigneeId(assigneeId)
+                .assigneeId(effectiveAssigneeId)
                 .actionPlanId(actionPlanId)
                 .departmentKpiId(departmentKpiId)
                 .columns(columns)
@@ -248,6 +258,25 @@ public class TaskService {
                 .filter(task -> actionPlanId == null || task.getActionPlan().getId().equals(actionPlanId))
                 .filter(task -> departmentKpiId == null || task.getDepartmentKpi().getId().equals(departmentKpiId))
                 .toList();
+    }
+
+    private void enforceEmployeeAssignment(CurrentUser currentUser, Task task) {
+        if (currentUser != null
+                && currentUser.role() == UserRole.EMPLOYEE
+                && !task.getAssignee().getId().equals(currentUser.employeeId())) {
+            throw new BusinessException(ErrorCode.AUTH_ACCESS_DENIED);
+        }
+    }
+
+    private UUID resolveEmployeeAssigneeFilter(UUID requestedAssigneeId) {
+        CurrentUser currentUser = currentUserProvider.getCurrentUser().orElse(null);
+        if (currentUser == null || currentUser.role() != UserRole.EMPLOYEE) {
+            return requestedAssigneeId;
+        }
+        if (requestedAssigneeId != null && !requestedAssigneeId.equals(currentUser.employeeId())) {
+            throw new BusinessException(ErrorCode.AUTH_ACCESS_DENIED);
+        }
+        return currentUser.employeeId();
     }
 
     private void createDependencies(Task targetTask, List<UUID> dependencyTaskIds) {
